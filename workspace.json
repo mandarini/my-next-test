@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "projects": {
+    "test-next": {
+      "root": "apps/test-next",
+      "sourceRoot": "apps/test-next",
+      "projectType": "application",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/next:build",
+          "options": {
+            "root": "apps/test-next",
+            "outputPath": "dist/apps/test-next"
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/next:server",
+          "options": {
+            "buildTarget": "test-next:build",
+            "dev": true
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "test-next:build:production",
+              "dev": false
+            }
+          }
+        },
+        "export": {
+          "builder": "@nrwl/next:export",
+          "options": {
+            "buildTarget": "test-next:build:production"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/test-next/**/*.{ts,tsx}"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/test-next/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "test-next-e2e": {
+      "root": "apps/test-next-e2e",
+      "sourceRoot": "apps/test-next-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/test-next-e2e/cypress.json",
+            "tsConfig": "apps/test-next-e2e/tsconfig.e2e.json",
+            "devServerTarget": "test-next:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "test-next:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/test-next-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/next"
+  },
+  "schematics": {
+    "@nrwl/react": {
+      "application": {
+        "babel": true
+      }
+    },
+    "@nrwl/next": {
+      "application": {
+        "style": "css",
+        "linter": "eslint"
+      }
+    }
+  },
+  "defaultProject": "test-next"
+}
